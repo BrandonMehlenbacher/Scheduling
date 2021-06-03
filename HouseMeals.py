@@ -28,17 +28,18 @@ def open_file(filename):
         pastList = file.readlines()
         
 @timed
-def cooking_scheduling(house_schedule, num_meals_person,weeks_away,STARTING_DAY=0,number_days=5):
+def cooking_scheduling(house_schedule, num_meals_person,weeks_away,STARTING_DAY=0,days_of_week="SMTWR"):
     assert STARTING_DAY >= 0
     assert STARTING_DAY < 5
-    NUMBER_MAP_DAY = {0:'S',1:'M',2:'T',3:'W',4:'Th'}
+    DAY_NUMBER_MAP = {'S':0,'M':1,'T':2,'W':3,'R':4}
+    NUMBER_MAP_DAY = {0:'S',1:'M',2:'T',3:'W',4:'R'}
     num_meals_copy = num_meals_person.copy()
     print("The number of meals we are working with is "+str(sum(num_meals_person.values())))
-    COOKING_DAYS = [0,1,2,3,4][:number_days] # sunday-thursday and number_days indicates the number we as a house choose to use
-    if number_days == 4:
-        COOKING_DAYS = [1,2,3,4]
-    elif number_days == 3:
-        COOKING_DAYS = [0,2,4]
+    COOKING_DAYS = []
+    for day in days_of_week:
+        if day not in COOKING_DAYS:
+            COOKING_DAYS.append(DAY_NUMBER_MAP[day])
+    number_days = len(COOKING_DAYS)
     NUM_WEEKS = ceil(sum(num_meals_person.values())/len(COOKING_DAYS))
     print("This amounts to " +str(NUM_WEEKS)+" weeks of scheduling") #what day is the cook cycle starting on
     days_consideration = COOKING_DAYS[STARTING_DAY:]+COOKING_DAYS[:STARTING_DAY]
@@ -158,6 +159,6 @@ weeks_away =[[[],[],[],[],[]],#23-27
                   [[],[],[],[],[]],#
                   [[],[],[],[],[]],
                   [[],[],[],[],[]]]#25-31
-meal_list = cooking_scheduling(house_schedule, num_meals_person,weeks_away,STARTING_DAY=0,number_days=4)#elizabeth look here
+meal_list = cooking_scheduling(house_schedule, num_meals_person,weeks_away,STARTING_DAY=0,days_of_week="MTWR")#elizabeth look here
 for x in meal_list:
     print(x)       
